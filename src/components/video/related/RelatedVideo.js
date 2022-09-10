@@ -13,7 +13,7 @@ export default function RelatedVideo({ video }) {
                     />
                 </Link>
                 <p className="absolute right-2 bottom-2 bg-gray-900 text-gray-100 text-xs px-1 py">
-                    12:10
+                    {duration}
                 </p>
             </div>
 
