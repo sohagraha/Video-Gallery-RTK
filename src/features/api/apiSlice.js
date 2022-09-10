@@ -12,6 +12,15 @@ export const apiSlice = createApi({
         getVideo: builder.query({
             query: (videoId) => `/videos/${videoId}`,
         }),
+        getRelatedVideos: builder.query({
+            query: ({ videoId, videoTitle }) => {
+                const tags = videoTitle.split(' ');
+                const query = tags.map(tag => `title_like=${tag}`).join('&');
+                const url = `/videos?${query}&id_ne=${videoId}&_limit=4`
+                console.log(url);
+                return url;
+            },
+        }),
         createVideo: builder.mutation({
             query: (body) => ({
                 url: '/videos',
@@ -38,6 +47,7 @@ export const apiSlice = createApi({
 export const {
     useGetVideosQuery,
     useGetVideoQuery,
+    useGetRelatedVideosQuery,
     useCreateVideoMutation,
     useUpdateVideoMutation,
     useDeleteVideoMutation,

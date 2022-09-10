@@ -29,7 +29,6 @@ export default function Video() {
         </>
     }
 
-
     return (
         <section className="pt-6 pb-20 min-h-[calc(100vh_-_157px)]">
             <div className="mx-auto max-w-7xl px-2 pb-20 min-h-[400px]">
@@ -44,7 +43,7 @@ export default function Video() {
                             <RelatedVideoLoader />
                         </>
                         : video?.id ?
-                            <RelatedVideos />
+                            <RelatedVideos id={video.id} title={video.title} />
                             : <Error message='No videos found' />
                     }
                 </div>
