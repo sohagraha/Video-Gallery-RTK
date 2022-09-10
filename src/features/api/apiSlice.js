@@ -9,10 +9,36 @@ export const apiSlice = createApi({
         getVideos: builder.query({
             query: () => '/videos',
         }),
-
+        getVideo: builder.query({
+            query: (videoId) => `/videos/${videoId}`,
+        }),
+        createVideo: builder.mutation({
+            query: (body) => ({
+                url: '/videos',
+                method: 'POST',
+                body,
+            }),
+        }),
+        updateVideo: builder.mutation({
+            query: (body) => ({
+                url: `/videos/${body.id}`,
+                method: 'PUT',
+                body,
+            }),
+        }),
+        deleteVideo: builder.mutation({
+            query: (id) => ({
+                url: `/videos/${id}`,
+                method: 'DELETE',
+            }),
+        }),
     })
 })
 
 export const {
     useGetVideosQuery,
+    useGetVideoQuery,
+    useCreateVideoMutation,
+    useUpdateVideoMutation,
+    useDeleteVideoMutation,
 } = apiSlice
