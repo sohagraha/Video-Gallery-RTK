@@ -1,8 +1,30 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import deleteImage from "../../assets/delete.svg";
 import editImage from "../../assets/edit.svg";
+import { useDeleteVideoMutation } from "../../features/api/apiSlice";
+import Error from "../ui/Error";
 
 export default function Description({ id, title, date, description }) {
+    const navigate = useNavigate();
+    const [deleteVideo, {
+        isSuccess,
+        isError,
+        isLoading,
+        error
+    }] = useDeleteVideoMutation();
+
+    const handleDelete = () => {
+        if (id) {
+            deleteVideo(id);
+        }
+    }
+    useEffect(() => {
+        if (isSuccess) {
+            navigate('/');
+        }
+    }, [isSuccess, navigate]);
+
     return (
         <div>
             <h1 className="text-lg font-semibold tracking-tight text-slate-800">
@@ -30,8 +52,10 @@ export default function Description({ id, title, date, description }) {
                             </span>
                         </Link>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 cursor-pointer" onClick={(handleDelete)}>
+
                         <div className="shrink-0">
+
                             <img
                                 className="w-5 block"
                                 src={deleteImage}
@@ -47,7 +71,11 @@ export default function Description({ id, title, date, description }) {
 
             <div className="mt-4 text-sm text-[#334155] dark:text-slate-400">
                 {description}
+
             </div>
+            {
+                !isLoading && isError && <Error error={error} />
+            }
         </div>
     );
 }

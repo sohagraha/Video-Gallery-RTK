@@ -5,13 +5,18 @@ export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:9000',
     }),
+    tagTypes: ['Videos', 'Video', 'RelatedVideo'],
     endpoints: (builder) => ({
         getVideos: builder.query({
             query: () => '/videos',
-            keepUnusedDataFor: 120,
+            keepUnusedDataFor: 600,
+            providesTags: ['Videos'],
         }),
         getVideo: builder.query({
             query: (videoId) => `/videos/${videoId}`,
+            providesTags: (result, error, arg) => [
+                { type: 'Video', id: arg },
+            ],
         }),
         getRelatedVideos: builder.query({
             query: ({ videoId, videoTitle }) => {
@@ -21,6 +26,9 @@ export const apiSlice = createApi({
                 console.log(url);
                 return url;
             },
+            providesTags: (result, error, arg) => [
+                { type: 'RelatedVideo', id: arg.id },
+            ],
         }),
         createVideo: builder.mutation({
             query: (body) => ({
@@ -28,20 +36,33 @@ export const apiSlice = createApi({
                 method: 'POST',
                 body,
             }),
+            invalidatesTags: ['Videos',],
         }),
 
         updateVideo: builder.mutation({
             query: (body) => ({
                 url: `/videos/${body.id}`,
-                method: 'PUT',
+                method: 'PATCH',
                 body,
             }),
+            invalidatesTags: (result, error, arg) => [
+                'Videos',
+                {
+                    type: 'Video',
+                    id: arg.id,
+                },
+                {
+                    type: 'RelatedVideo',
+                    id: arg.id,
+                }
+            ],
         }),
         deleteVideo: builder.mutation({
             query: (id) => ({
                 url: `/videos/${id}`,
                 method: 'DELETE',
             }),
+            invalidatesTags: ['Videos',],
         }),
     })
 })
