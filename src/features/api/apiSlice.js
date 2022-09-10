@@ -8,6 +8,7 @@ export const apiSlice = createApi({
     endpoints: (builder) => ({
         getVideos: builder.query({
             query: () => '/videos',
+            keepUnusedDataFor: 120,
         }),
         getVideo: builder.query({
             query: (videoId) => `/videos/${videoId}`,
@@ -28,6 +29,7 @@ export const apiSlice = createApi({
                 body,
             }),
         }),
+
         updateVideo: builder.mutation({
             query: (body) => ({
                 url: `/videos/${body.id}`,
